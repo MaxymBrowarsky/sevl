@@ -32,15 +32,17 @@ public class Theme {
         return text;
     }
 
-    public void setText(String text) {
+    public Theme setText(String text) {
         this.text = text;
+        return this;
     }
 
     public Task getTask() {
         return task;
     }
 
-    public void setTask(Task task) {
+    public Theme setTask(Task task) {
         this.task = task;
+        return this;
     }
 }

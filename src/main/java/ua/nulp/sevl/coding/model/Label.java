@@ -32,15 +32,17 @@ public class Label {
         return text;
     }
 
-    public void setText(String text) {
+    public Label setText(String text) {
         this.text = text;
+        return this;
     }
 
     public Task getTask() {
         return task;
     }
 
-    public void setTask(Task task) {
+    public Label setTask(Task task) {
         this.task = task;
+        return this;
     }
 }
