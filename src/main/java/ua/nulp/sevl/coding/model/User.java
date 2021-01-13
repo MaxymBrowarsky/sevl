@@ -2,9 +2,8 @@ package ua.nulp.sevl.coding.model;
 
 import org.springframework.context.annotation.Primary;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -15,6 +14,11 @@ public class User {
     private String surname;
     private String login;
     private String password;
+
+    @ManyToMany
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
 
     public User() {
 
@@ -68,6 +72,15 @@ public class User {
 
     public User setPassword(String password) {
         this.password = password;
+        return this;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public User setRoles(Set<Role> roles) {
+        this.roles = roles;
         return this;
     }
 }
