@@ -1,6 +1,7 @@
 package ua.nulp.sevl.coding.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ua.nulp.sevl.coding.model.*;
 import ua.nulp.sevl.coding.repository.TaskRepository;
 import ua.nulp.sevl.coding.service.TaskService;
@@ -8,6 +9,7 @@ import ua.nulp.sevl.coding.service.TaskService;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class TaskServiceImpl implements TaskService {
 
     @Autowired

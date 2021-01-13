@@ -1,6 +1,7 @@
 package ua.nulp.sevl.coding.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "attempt")
@@ -22,17 +23,17 @@ public class Attempt {
             name = "TaskAttempt",
             joinColumns = @JoinColumn(name = "id"),
             inverseJoinColumns = @JoinColumn(name = "attempt_id"))
-    private Task task;
+    private Set<Task> tasks;
 
     public Attempt() {
     }
 
-    public Attempt(User user, Long time, Integer grade, String solution, Task task) {
+    public Attempt(User user, Long time, Integer grade, String solution, Set<Task> tasks) {
         this.user = user;
         this.time = time;
         this.grade = grade;
         this.solution = solution;
-        this.task = task;
+        this.tasks = tasks;
     }
 
     public Long getId() {
@@ -79,12 +80,12 @@ public class Attempt {
         return this;
     }
 
-    public Task getTask() {
-        return task;
+    public Set<Task> getTasks() {
+        return tasks;
     }
 
-    public Attempt setTask(Task task) {
-        this.task = task;
+    public Attempt setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
         return this;
     }
 }

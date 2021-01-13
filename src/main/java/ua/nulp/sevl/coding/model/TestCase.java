@@ -1,6 +1,7 @@
 package ua.nulp.sevl.coding.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class TestCase {
@@ -14,15 +15,15 @@ public class TestCase {
             name = "TaskTestCase",
             joinColumns = @JoinColumn(name = "id"),
             inverseJoinColumns = @JoinColumn(name = "test_case_id"))
-    private Task task;
+    private Set<Task> tasks;
 
     public TestCase() {
     }
 
-    public TestCase(String input, String result, Task task) {
+    public TestCase(String input, String result, Set<Task> tasks) {
         this.input = input;
         this.result = result;
-        this.task = task;
+        this.tasks = tasks;
     }
 
     public Long getId() {
@@ -51,12 +52,12 @@ public class TestCase {
         return this;
     }
 
-    public Task getTask() {
-        return task;
+    public Set<Task> getTasks() {
+        return tasks;
     }
 
-    public TestCase setTask(Task task) {
-        this.task = task;
+    public TestCase setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
         return this;
     }
 }

@@ -1,8 +1,10 @@
 package ua.nulp.sevl.coding.service;
 
+import org.springframework.stereotype.Service;
 import ua.nulp.sevl.coding.model.*;
 
 import java.util.List;
+
 
 public interface TaskService {
     void createTask(String title, String description, String author, Theme theme, List<TestCase> testCases, List<Label> labels, List<Attempt> attempts);
