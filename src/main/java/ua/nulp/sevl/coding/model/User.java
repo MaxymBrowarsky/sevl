@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Primary;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.List;
 
 @Entity
 public class User {
@@ -15,6 +17,9 @@ public class User {
     private String surname;
     private String login;
     private String password;
+    //TODO add hibernate mapping to list of Attempt also change constructor and add getter and setter
+//    @OneToMany(mappedBy="user")
+//    private List<Attempt> attempts;
 
     public User() {
 

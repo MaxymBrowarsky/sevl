@@ -36,4 +36,74 @@ public class Task {
         this.attempts = attempts;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Task setTitle(String title) {
+        this.title = title;
+        return null;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Task setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public Task setAuthor(String author) {
+        this.author = author;
+        return this;
+    }
+
+    public List<Theme> getTheme() {
+        return theme;
+    }
+
+    public Task setTheme(List<Theme> theme) {
+        this.theme = theme;
+        return this;
+    }
+
+    public List<TestCase> getTestCases() {
+        return testCases;
+    }
+
+    public Task setTestCases(List<TestCase> testCases) {
+        this.testCases = testCases;
+        return this;
+    }
+
+    public List<Label> getLabels() {
+        return labels;
+    }
+
+    public Task setLabels(List<Label> labels) {
+        this.labels = labels;
+        return this;
+    }
+
+    public List<Attempt> getAttempts() {
+        return attempts;
+    }
+
+    public Task setAttempts(List<Attempt> attempts) {
+        this.attempts = attempts;
+        return this;
+    }
 }

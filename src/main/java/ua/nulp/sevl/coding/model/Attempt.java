@@ -7,6 +7,9 @@ public class Attempt {
     @Id
     @GeneratedValue
     private Long id;
+    //TODO add hibernate mapping to user also change constructor and add getter and setter
+//    @ManyToOne
+//    @JoinColumn(name="userId", nullable=false)
     private User user;
     private Long time;
     private Integer grade;
