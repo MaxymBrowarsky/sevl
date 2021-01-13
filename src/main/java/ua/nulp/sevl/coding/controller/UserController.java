@@ -38,7 +38,7 @@ public class UserController {
             err.printStackTrace();
             return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
         }
-        userService.createUser(user.getName(), user.getSurname(), user.getLogin(), user.getPassword());
+        userService.createUser(user.getName(), user.getSurname(), user.getLogin(), user.getPassword(), user.getRoles(), user.getAttempts());
         System.out.println(user.getName());
         return  new ResponseEntity<User>(user,HttpStatus.OK);
     }

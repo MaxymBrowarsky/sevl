@@ -10,6 +10,7 @@ import ua.nulp.sevl.coding.service.AttemptService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class AttemptServiceImpl implements AttemptService {
@@ -23,8 +24,8 @@ public class AttemptServiceImpl implements AttemptService {
     }
 
     @Override
-    public void save(User user, Long time, Integer grade, String solution, Task task) {
-        Attempt attempt = new Attempt(user, time, grade, solution, task);
+    public void save(User user, Long time, Integer grade, String solution, Set<Task> tasks) {
+        Attempt attempt = new Attempt(user, time, grade, solution, tasks);
         attemptRepository.save(attempt);
     }
 
@@ -34,7 +35,7 @@ public class AttemptServiceImpl implements AttemptService {
     }
 
     @Override
-    public Attempt update(Long id, User user, Long time, Integer grade, String solution, Task task) {
+    public Attempt update(Long id, User user, Long time, Integer grade, String solution, Set<Task> tasks) {
         Optional<Attempt> r = attemptRepository.findById(id);
         if (r.isPresent()) {
             Attempt a = r.get();
@@ -42,7 +43,7 @@ public class AttemptServiceImpl implements AttemptService {
                     .setTime(time)
                     .setGrade(grade)
                     .setSolution(solution)
-                    .setTask(task);
+                    .setTasks(tasks);
         }
         return attemptRepository.findById(id).get();
     }
@@ -56,7 +57,7 @@ public class AttemptServiceImpl implements AttemptService {
                     .setTime(attempt.getTime())
                     .setGrade(attempt.getGrade())
                     .setSolution(attempt.getSolution())
-                    .setTask(attempt.getTask());
+                    .setTasks(attempt.getTasks());
         }
         return attemptRepository.findById(attempt.getId()).get();
     }

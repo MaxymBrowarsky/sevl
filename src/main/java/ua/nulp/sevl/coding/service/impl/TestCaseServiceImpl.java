@@ -9,6 +9,7 @@ import ua.nulp.sevl.coding.service.TestCaseService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class TestCaseServiceImpl implements TestCaseService {
@@ -22,8 +23,8 @@ public class TestCaseServiceImpl implements TestCaseService {
     }
 
     @Override
-    public void save(String input, String result, Task task) {
-        TestCase testCase = new TestCase(input, result, task);
+    public void save(String input, String result, Set<Task> tasks) {
+        TestCase testCase = new TestCase(input, result, tasks);
         testCaseRepository.save(testCase);
     }
 
@@ -33,13 +34,13 @@ public class TestCaseServiceImpl implements TestCaseService {
     }
 
     @Override
-    public TestCase update(Long id, String input, String result, Task task) {
+    public TestCase update(Long id, String input, String result, Set<Task> tasks) {
         Optional<TestCase> r = testCaseRepository.findById(id);
         if (r.isPresent()) {
             TestCase t = r.get();
             return t.setInput(input)
                     .setResult(result)
-                    .setTask(task);
+                    .setTasks(tasks);
         }
         return testCaseRepository.findById(id).get();
     }
@@ -51,7 +52,7 @@ public class TestCaseServiceImpl implements TestCaseService {
             TestCase t = r.get();
             return t.setInput(testCase.getInput())
                     .setResult(testCase.getResult())
-                    .setTask(testCase.getTask());
+                    .setTasks(testCase.getTasks());
         }
         return testCaseRepository.findById(testCase.getId()).get();
     }
