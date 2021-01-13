@@ -2,6 +2,7 @@ package ua.nulp.sevl.coding.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.nulp.sevl.coding.model.Attempt;
 import ua.nulp.sevl.coding.model.Role;
 import ua.nulp.sevl.coding.model.User;
 import ua.nulp.sevl.coding.repository.UserRepository;
@@ -17,12 +18,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public void createUser(String name, String surname, String login, String password, Set<Role> roles, Set<Attempt> attempts) {
+    public void createUser(String name, String surname, String login, String password, Role roles, Set<Attempt> attempts) {
         User user = new User(name, surname, login, password, roles, attempts);
         save(user);
     }
 
-    public void save(String name, String surname, String login, String password, Set<Role> roles, Set<Attempt> attempts) {
+    public void save(String name, String surname, String login, String password, Role roles, Set<Attempt> attempts) {
         User user = new User(name, surname, login, password, roles, attempts);
         userRepository.save(user);
     }
@@ -35,7 +36,7 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    public User update(Long id, String name, String surname, String login, String password, Set<Role> roles, Set<Attempt> attempts) {
+    public User update(Long id, String name, String surname, String login, String password, Role roles, Set<Attempt> attempts) {
         Optional<User> r = userRepository.findById(id);
         if (r.isPresent()) {
             User u = r.get();
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
             Role role = new Role();
             role.setName("USER");
             roles.add(role);
-            User user = new User().setLogin("test").setPassword("test").setRoles(roles);
+            User user = new User().setLogin("test").setPassword("test").setRoles(role);
             return user;
         }
         User user = userRepository.findUserByLogin(login);

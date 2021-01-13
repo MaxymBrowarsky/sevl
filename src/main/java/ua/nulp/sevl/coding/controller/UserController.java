@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,8 @@ import ua.nulp.sevl.coding.service.UserService;
 @Controller
 @RequestMapping("/user")
 public class UserController {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private UserService userService;
 
@@ -38,6 +41,7 @@ public class UserController {
             err.printStackTrace();
             return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.createUser(user.getName(), user.getSurname(), user.getLogin(), user.getPassword(), user.getRoles(), user.getAttempts());
         System.out.println(user.getName());
         return  new ResponseEntity<User>(user,HttpStatus.OK);

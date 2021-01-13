@@ -11,7 +11,7 @@ import java.util.Set;
 @Entity
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "first_name")
     private String name;
@@ -23,7 +23,7 @@ public class User {
     private String password;
     @ManyToOne
     @JoinColumn(name = "role_id")
-    private Set<Role> roles;
+    private Role roles;
 
     @OneToMany
     private Set<Attempt> attempts;
@@ -32,7 +32,7 @@ public class User {
 
     }
 
-    public User(String name, String surname, String login, String password, Set<Role> roles, Set<Attempt> attempts) {
+    public User(String name, String surname, String login, String password, Role roles, Set<Attempt> attempts) {
         this.name = name;
         this.surname = surname;
         this.login = login;
@@ -85,11 +85,11 @@ public class User {
         return this;
     }
 
-    public Set<Role> getRoles() {
+    public Role getRoles() {
         return roles;
     }
 
-    public User setRoles(Set<Role> roles) {
+    public User setRoles(Role roles) {
         this.roles = roles;
         return this;
     }

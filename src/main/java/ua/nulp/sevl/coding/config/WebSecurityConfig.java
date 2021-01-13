@@ -6,6 +6,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -23,7 +26,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/edit/**").hasAnyRole("ADMIN", "EDITOR")
                 .antMatchers("/user/login").permitAll()
                 .antMatchers("/user/index").permitAll()
-                .antMatchers("/user/create").hasRole("ADMIN")
+                .antMatchers("/user/create").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().permitAll()
@@ -31,6 +34,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().permitAll()
                 .and()
                 .exceptionHandling().accessDeniedPage("/403")
+                .and()
+                .csrf()
+                .disable()
         ;
+    }
+    @Bean
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
     }
 }
