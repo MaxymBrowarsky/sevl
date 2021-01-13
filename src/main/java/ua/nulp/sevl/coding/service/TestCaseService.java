@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface TestCaseService {
     void save(TestCase testCase);
-    void save(String input, String result, Long taskId, Task task);
+    void save(String input, String result, Task task);
     void delete(Long id);
-    TestCase update(Long id, String input, String result, Long taskId, Task task);
+    TestCase update(Long id, String input, String result, Task task);
     TestCase update(TestCase testCase);
     TestCase find(Long id);
     List<TestCase> findAll();
