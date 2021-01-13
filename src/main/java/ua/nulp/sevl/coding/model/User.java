@@ -22,8 +22,8 @@ public class User {
     private String login;
     private String password;
     //TODO add hibernate mapping to list of Attempt also change constructor and add getter and setter
-//    @OneToMany(mappedBy="user")
-//    private List<Attempt> attempts;
+    @OneToMany(mappedBy="user")
+    private List<Attempt> attempts;
 
     @ManyToMany
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),

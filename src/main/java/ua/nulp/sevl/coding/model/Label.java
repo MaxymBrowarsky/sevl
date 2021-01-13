@@ -9,7 +9,7 @@ public class Label {
     private Long id;
     private String text;
     @ManyToOne
-    @JoinColumn(name="taskId", nullable=true)
+    @JoinColumn(name="task_id", nullable=true)
     private Task task;
 
     public Label() {

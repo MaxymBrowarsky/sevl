@@ -14,9 +14,11 @@ import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @EnableScheduling
 @EnableAutoConfiguration
+@EnableWebMvc
 @Configuration
 @ComponentScan("ua.nulp.sevl.coding")
 public class App extends SpringBootServletInitializer {

@@ -9,9 +9,10 @@ public class TestCase {
     private Long id;
     private String input;
     private String result;
+    @Column(name = "task_id", insertable = false, updatable = false)
     private Long taskId;
     @ManyToOne
-    @JoinColumn(name="taskId", nullable=true)
+    @JoinColumn(name="task_id", nullable=true)
     private Task task;
 
     public TestCase() {

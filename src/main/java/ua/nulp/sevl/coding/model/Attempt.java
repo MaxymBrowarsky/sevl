@@ -8,14 +8,14 @@ public class Attempt {
     @GeneratedValue
     private Long id;
     //TODO add hibernate mapping to user also change constructor and add getter and setter
-//    @ManyToOne
-//    @JoinColumn(name="userId", nullable=false)
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable=false)
     private User user;
     private Long time;
     private Integer grade;
     private String solution;
     @ManyToOne
-    @JoinColumn(name="taskId", nullable=true)
+    @JoinColumn(name="task_id", nullable=true)
     private Task task;
 
     public Attempt() {

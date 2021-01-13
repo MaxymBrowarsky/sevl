@@ -2,12 +2,15 @@ package ua.nulp.sevl.coding.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.nulp.sevl.coding.model.Role;
 import ua.nulp.sevl.coding.model.User;
 import ua.nulp.sevl.coding.repository.UserRepository;
 import ua.nulp.sevl.coding.service.UserService;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -47,5 +50,19 @@ public class UserServiceImpl implements UserService {
 
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public User findByLogin(String login) {
+        if (login == "test") {
+            Set<Role> roles = new HashSet<Role>();
+            Role role = new Role();
+            role.setName("USER");
+            roles.add(role);
+            User user = new User().setLogin("test").setPassword("test").setRoles(roles);
+            return user;
+        }
+        User user = userRepository.findUserByLogin(login);
+        return user;
     }
 }

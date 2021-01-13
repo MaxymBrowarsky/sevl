@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import ua.nulp.sevl.coding.form.UserForm;
 import ua.nulp.sevl.coding.model.User;
 import ua.nulp.sevl.coding.service.SecurityService;
 import ua.nulp.sevl.coding.service.UserService;
@@ -41,21 +43,22 @@ public class UserController {
         return  new ResponseEntity<User>(user,HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(Model model, String error, String logout) {
-        if (error != null) {
-            model.addAttribute("error", "Username or password is incorrect.");
-        }
-
-        if (logout != null) {
-            model.addAttribute("message", "Logged out successfully.");
-        }
-
+    @GetMapping(value = "/login")
+    public String login(Model model) {
+        UserForm uf = new UserForm();
+        model.addAttribute("user", uf);
         return "login";
+    }
+    @GetMapping(value = "/index")
+    public String index(Model model) {
+        System.out.println("indexsssss");
+        return "index";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<String> login(@RequestParam String login, @RequestParam String password) {
+        System.out.println(login);
+        System.out.println(password);
         securityService.autoLogin(login, password);
         if (securityService.findLoggedInUsername() == login) {
             return new ResponseEntity<String>("Success", HttpStatus.OK);
@@ -65,7 +68,7 @@ public class UserController {
 
     }
     @RequestMapping(value = {"/", "/welcome/{id}"}, method = RequestMethod.GET, params = {"test"})
-    public ResponseEntity<String> welcome(@RequestParam(value="test") String test) {
+    public ResponseEntity<String> welcome(@RequestParam(value="test", required = false) String test) {
         System.out.println(test);
         return new ResponseEntity<String>("Success", HttpStatus.OK);
     }
