@@ -2,11 +2,15 @@ package ua.nulp.sevl.coding.model;
 
 import org.springframework.context.annotation.Primary;
 
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.List;
+import javax.persistence.*;
+import java.util.Set;
+
 
 @Entity
 public class User {
@@ -20,6 +24,11 @@ public class User {
     //TODO add hibernate mapping to list of Attempt also change constructor and add getter and setter
 //    @OneToMany(mappedBy="user")
 //    private List<Attempt> attempts;
+
+    @ManyToMany
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
 
     public User() {
 
@@ -73,6 +82,15 @@ public class User {
 
     public User setPassword(String password) {
         this.password = password;
+        return this;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public User setRoles(Set<Role> roles) {
+        this.roles = roles;
         return this;
     }
 }
