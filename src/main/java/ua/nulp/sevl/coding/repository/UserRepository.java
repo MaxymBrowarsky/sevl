@@ -6,4 +6,5 @@ import ua.nulp.sevl.coding.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+    User findUserByLogin(String login);
 }

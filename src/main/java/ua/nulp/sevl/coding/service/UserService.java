@@ -15,4 +15,5 @@ public interface UserService {
     User update(Long id, String name, String surname, String login, String password, Set<Role> roles, Set<Attempt> attempts);
     User update(User user);
     List<User> findAll();
+    User findByLogin(String login);
 }
