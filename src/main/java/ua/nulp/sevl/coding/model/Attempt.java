@@ -3,19 +3,25 @@ package ua.nulp.sevl.coding.model;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "attempt")
 public class Attempt {
     @Id
     @GeneratedValue
     private Long id;
-    //TODO add hibernate mapping to user also change constructor and add getter and setter
-//    @ManyToOne
-//    @JoinColumn(name="userId", nullable=false)
-    private User user;
-    private Long time;
-    private Integer grade;
-    private String solution;
     @ManyToOne
-    @JoinColumn(name="taskId", nullable=true)
+    @JoinColumn(name="user_id", nullable=false)
+    private User user;
+    @Column(name = "time")
+    private Long time;
+    @Column(name = "grade")
+    private Integer grade;
+    @Column(name = "solution")
+    private String solution;
+    @ManyToMany
+    @JoinTable(
+            name = "TaskAttempt",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "attempt_id"))
     private Task task;
 
     public Attempt() {

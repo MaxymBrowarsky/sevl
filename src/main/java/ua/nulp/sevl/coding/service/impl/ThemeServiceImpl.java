@@ -10,6 +10,7 @@ import ua.nulp.sevl.coding.service.ThemeService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ThemeServiceImpl implements ThemeService {
@@ -23,8 +24,8 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public void save(String text, Task task) {
-        Theme theme = new Theme(text, task);
+    public void save(String text, Set<Task> tasks) {
+        Theme theme = new Theme(text, tasks);
         themeRepository.save(theme);
     }
 
@@ -34,12 +35,12 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public Theme update(Long id, String text, Task task) {
+    public Theme update(Long id, String text, Set<Task> tasks) {
         Optional<Theme> r = themeRepository.findById(id);
         if (r.isPresent()) {
             Theme t = r.get();
             return t.setText(text)
-                    .setTask(task);
+                    .setTasks(tasks);
         }
         return themeRepository.findById(id).get();
     }
@@ -50,7 +51,7 @@ public class ThemeServiceImpl implements ThemeService {
         if (r.isPresent()) {
             Theme t = r.get();
             return t.setText(theme.getText())
-                    .setTask(theme.getTask());
+                    .setTasks(theme.getTasks());
         }
         return themeRepository.findById(theme.getId()).get();
     }

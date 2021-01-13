@@ -22,8 +22,8 @@ public class TestCaseServiceImpl implements TestCaseService {
     }
 
     @Override
-    public void save(String input, String result, Long taskId, Task task) {
-        TestCase testCase = new TestCase(input, result, taskId, task);
+    public void save(String input, String result, Task task) {
+        TestCase testCase = new TestCase(input, result, task);
         testCaseRepository.save(testCase);
     }
 
@@ -33,13 +33,12 @@ public class TestCaseServiceImpl implements TestCaseService {
     }
 
     @Override
-    public TestCase update(Long id, String input, String result, Long taskId, Task task) {
+    public TestCase update(Long id, String input, String result, Task task) {
         Optional<TestCase> r = testCaseRepository.findById(id);
         if (r.isPresent()) {
             TestCase t = r.get();
             return t.setInput(input)
                     .setResult(result)
-                    .setTaskId(taskId)
                     .setTask(task);
         }
         return testCaseRepository.findById(id).get();
@@ -52,7 +51,6 @@ public class TestCaseServiceImpl implements TestCaseService {
             TestCase t = r.get();
             return t.setInput(testCase.getInput())
                     .setResult(testCase.getResult())
-                    .setTaskId(testCase.getTaskId())
                     .setTask(testCase.getTask());
         }
         return testCaseRepository.findById(testCase.getId()).get();

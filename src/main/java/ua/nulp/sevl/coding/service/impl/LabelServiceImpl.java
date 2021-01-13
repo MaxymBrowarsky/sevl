@@ -22,8 +22,8 @@ public class LabelServiceImpl implements LabelService {
     }
 
     @Override
-    public void save(String text, Task task) {
-        Label label = new Label(text, task);
+    public void save(String text, List<Task> tasks) {
+        Label label = new Label(text, tasks);
         labelRepository.save(label);
     }
 
@@ -33,12 +33,12 @@ public class LabelServiceImpl implements LabelService {
     }
 
     @Override
-    public Label update(Long id, String text, Task task) {
+    public Label update(Long id, String text, List<Task> tasks) {
         Optional<Label> r = labelRepository.findById(id);
         if (r.isPresent()) {
             Label l = r.get();
             return l.setText(text)
-                    .setTask(task);
+                    .setTask(tasks);
         }
         return labelRepository.findById(id).get();
     }
