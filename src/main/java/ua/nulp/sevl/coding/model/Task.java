@@ -1,9 +1,6 @@
 package ua.nulp.sevl.coding.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -14,19 +11,32 @@ public class Task {
     private String title;
     private String description;
     private String author;
-    @OneToMany(mappedBy="task")
-    private List<Theme> theme;
-    @OneToMany(mappedBy="task")
+    @ManyToOne
+    @JoinColumn(name = "theme_id")
+    private Theme theme;
+    @ManyToMany
+    @JoinTable(
+            name = "TaskLabel",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "task_id"))
     private List<TestCase> testCases;
-    @OneToMany(mappedBy="task")
+    @ManyToMany
+    @JoinTable(
+            name = "TaskTestCase",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "task_id"))
     private List<Label> labels;
-    @OneToMany(mappedBy="task")
+    @ManyToMany
+    @JoinTable(
+            name = "TaskAttempt",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "task_id"))
     private List<Attempt> attempts;
 
     public Task() {
     }
 
-    public Task(String title, String description, String author, List<Theme> theme, List<TestCase> testCases, List<Label> labels, List<Attempt> attempts) {
+    public Task(String title, String description, String author, Theme theme, List<TestCase> testCases, List<Label> labels, List<Attempt> attempts) {
         this.title = title;
         this.description = description;
         this.author = author;
@@ -71,11 +81,11 @@ public class Task {
         return this;
     }
 
-    public List<Theme> getTheme() {
+    public Theme getTheme() {
         return theme;
     }
 
-    public Task setTheme(List<Theme> theme) {
+    public Task setTheme(Theme theme) {
         this.theme = theme;
         return this;
     }

@@ -16,7 +16,7 @@ public class TaskServiceImpl implements TaskService {
     private TaskRepository taskRepository;
 
     @Override
-    public void createTask(String title, String description, String author, List<Theme> theme, List<TestCase> testCases, List<Label> labels, List<Attempt> attempts) {
+    public void createTask(String title, String description, String author, Theme theme, List<TestCase> testCases, List<Label> labels, List<Attempt> attempts) {
         Task task = new Task(title, description, author, theme, testCases, labels, attempts);
         save(task);
     }
@@ -27,7 +27,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void save(String title, String description, String author, List<Theme> theme, List<TestCase> testCases, List<Label> labels, List<Attempt> attempts) {
+    public void save(String title, String description, String author, Theme theme, List<TestCase> testCases, List<Label> labels, List<Attempt> attempts) {
         Task task = new Task(title, description, author, theme, testCases, labels, attempts);
         taskRepository.save(task);
     }
@@ -54,7 +54,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task update(Long id, String title, String description, String author, List<Theme> theme, List<TestCase> testCases, List<Label> labels, List<Attempt> attempts) {
+    public Task update(Long id, String title, String description, String author, Theme theme, List<TestCase> testCases, List<Label> labels, List<Attempt> attempts) {
         Optional<Task> r = taskRepository.findById(id);
         if (r.isPresent()) {
             Task t = r.get();

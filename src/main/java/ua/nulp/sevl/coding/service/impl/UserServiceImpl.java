@@ -17,13 +17,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public void createUser(String name, String surname, String login, String password) {
-        User user = new User(name, surname, login, password);
+    public void createUser(String name, String surname, String login, String password, Set<Role> roles, Set<Attempt> attempts) {
+        User user = new User(name, surname, login, password, roles, attempts);
         save(user);
     }
 
-    public void save(String name, String surname, String login, String password) {
-        User user = new User(name, surname, login, password);
+    public void save(String name, String surname, String login, String password, Set<Role> roles, Set<Attempt> attempts) {
+        User user = new User(name, surname, login, password, roles, attempts);
         userRepository.save(user);
     }
 
@@ -35,11 +35,15 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    public User update(Long id, String name, String surname, String login, String password) {
+    public User update(Long id, String name, String surname, String login, String password, Set<Role> roles, Set<Attempt> attempts) {
         Optional<User> r = userRepository.findById(id);
         if (r.isPresent()) {
             User u = r.get();
-            return u.setName(name).setSurname(surname).setPassword(password);
+            return u.setName(name)
+                    .setSurname(surname)
+                    .setPassword(password)
+                    .setRoles(roles)
+                    .setAttempts(attempts);
         }
         return userRepository.findById(id).get();
     }

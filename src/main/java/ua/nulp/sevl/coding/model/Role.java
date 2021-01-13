@@ -14,7 +14,10 @@ public class Role {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
+    @Column(name = "description")
+    private String description;
+
+    @OneToMany
     private Set<User> users;
 
     public Role() {
@@ -42,6 +45,15 @@ public class Role {
 
     public void setUsers(Set<User> users) {
         this.users = users;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Role setDescription(String description) {
+        this.description = description;
+        return this;
     }
 
     @Override

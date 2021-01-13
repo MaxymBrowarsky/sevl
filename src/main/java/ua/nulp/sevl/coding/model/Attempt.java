@@ -3,19 +3,25 @@ package ua.nulp.sevl.coding.model;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "attempt")
 public class Attempt {
     @Id
     @GeneratedValue
     private Long id;
-    //TODO add hibernate mapping to user also change constructor and add getter and setter
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
     private User user;
+    @Column(name = "time")
     private Long time;
+    @Column(name = "grade")
     private Integer grade;
+    @Column(name = "solution")
     private String solution;
-    @ManyToOne
-    @JoinColumn(name="task_id", nullable=true)
+    @ManyToMany
+    @JoinTable(
+            name = "TaskAttempt",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "attempt_id"))
     private Task task;
 
     public Attempt() {
@@ -41,39 +47,44 @@ public class Attempt {
         return user;
     }
 
-    public void setUser(User user) {
+    public Attempt setUser(User user) {
         this.user = user;
+        return this;
     }
 
     public Long getTime() {
         return time;
     }
 
-    public void setTime(Long time) {
+    public Attempt setTime(Long time) {
         this.time = time;
+        return this;
     }
 
     public Integer getGrade() {
         return grade;
     }
 
-    public void setGrade(Integer grade) {
+    public Attempt setGrade(Integer grade) {
         this.grade = grade;
+        return this;
     }
 
     public String getSolution() {
         return solution;
     }
 
-    public void setSolution(String solution) {
+    public Attempt setSolution(String solution) {
         this.solution = solution;
+        return this;
     }
 
     public Task getTask() {
         return task;
     }
 
-    public void setTask(Task task) {
+    public Attempt setTask(Task task) {
         this.task = task;
+        return this;
     }
 }

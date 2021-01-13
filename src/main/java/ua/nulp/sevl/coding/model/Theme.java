@@ -1,6 +1,7 @@
 package ua.nulp.sevl.coding.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Theme {
@@ -8,16 +9,15 @@ public class Theme {
     @GeneratedValue
     private Long id;
     private String text;
-    @ManyToOne
-    @JoinColumn(name="task_id", nullable=true)
-    private Task task;
+    @OneToMany
+    private Set<Task> tasks;
 
     public Theme() {
     }
 
-    public Theme(String text, Task task) {
+    public Theme(String text, Set<Task> tasks) {
         this.text = text;
-        this.task = task;
+        this.tasks = tasks;
     }
 
     public Long getId() {
@@ -32,15 +32,17 @@ public class Theme {
         return text;
     }
 
-    public void setText(String text) {
+    public Theme setText(String text) {
         this.text = text;
+        return this;
     }
 
-    public Task getTask() {
-        return task;
+    public Set<Task> getTasks() {
+        return tasks;
     }
 
-    public void setTask(Task task) {
-        this.task = task;
+    public Theme setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
+        return this;
     }
 }

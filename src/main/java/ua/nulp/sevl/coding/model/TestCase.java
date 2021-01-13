@@ -9,19 +9,19 @@ public class TestCase {
     private Long id;
     private String input;
     private String result;
-    @Column(name = "task_id", insertable = false, updatable = false)
-    private Long taskId;
-    @ManyToOne
-    @JoinColumn(name="task_id", nullable=true)
+    @ManyToMany
+    @JoinTable(
+            name = "TaskTestCase",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "test_case_id"))
     private Task task;
 
     public TestCase() {
     }
 
-    public TestCase(String input, String result, Long taskId, Task task) {
+    public TestCase(String input, String result, Task task) {
         this.input = input;
         this.result = result;
-        this.taskId = taskId;
         this.task = task;
     }
 
@@ -37,31 +37,26 @@ public class TestCase {
         return input;
     }
 
-    public void setInput(String input) {
+    public TestCase setInput(String input) {
         this.input = input;
+        return this;
     }
 
     public String getResult() {
         return result;
     }
 
-    public void setResult(String result) {
+    public TestCase setResult(String result) {
         this.result = result;
-    }
-
-    public Long getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(Long taskId) {
-        this.taskId = taskId;
+        return this;
     }
 
     public Task getTask() {
         return task;
     }
 
-    public void setTask(Task task) {
+    public TestCase setTask(Task task) {
         this.task = task;
+        return this;
     }
 }

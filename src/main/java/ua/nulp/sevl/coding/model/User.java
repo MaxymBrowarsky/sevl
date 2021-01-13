@@ -1,13 +1,9 @@
 package ua.nulp.sevl.coding.model;
 
-import org.springframework.context.annotation.Primary;
-
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import java.util.List;
 import javax.persistence.*;
 import java.util.Set;
 
@@ -17,28 +13,32 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(name = "first_name")
     private String name;
+    @Column(name = "second_name")
     private String surname;
+    @Column(name = "nic_name")
     private String login;
+    @Column(name = "password")
     private String password;
-    //TODO add hibernate mapping to list of Attempt also change constructor and add getter and setter
-    @OneToMany(mappedBy="user")
-    private List<Attempt> attempts;
-
-    @ManyToMany
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @ManyToOne
+    @JoinColumn(name = "role_id")
     private Set<Role> roles;
+
+    @OneToMany
+    private Set<Attempt> attempts;
 
     public User() {
 
     }
 
-    public User(String name, String surname, String login, String password) {
+    public User(String name, String surname, String login, String password, Set<Role> roles, Set<Attempt> attempts) {
         this.name = name;
         this.surname = surname;
         this.login = login;
         this.password = password;
+        this.roles = roles;
+        this.attempts = attempts;
     }
 
     public Long getId() {
@@ -91,6 +91,15 @@ public class User {
 
     public User setRoles(Set<Role> roles) {
         this.roles = roles;
+        return this;
+    }
+
+    public Set<Attempt> getAttempts() {
+        return attempts;
+    }
+
+    public User setAttempts(Set<Attempt> attempts) {
+        this.attempts = attempts;
         return this;
     }
 }
