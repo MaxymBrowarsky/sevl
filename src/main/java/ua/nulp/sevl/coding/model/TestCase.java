@@ -36,31 +36,35 @@ public class TestCase {
         return input;
     }
 
-    public void setInput(String input) {
+    public TestCase setInput(String input) {
         this.input = input;
+        return this;
     }
 
     public String getResult() {
         return result;
     }
 
-    public void setResult(String result) {
+    public TestCase setResult(String result) {
         this.result = result;
+        return this;
     }
 
     public Long getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(Long taskId) {
+    public TestCase setTaskId(Long taskId) {
         this.taskId = taskId;
+        return this;
     }
 
     public Task getTask() {
         return task;
     }
 
-    public void setTask(Task task) {
+    public TestCase setTask(Task task) {
         this.task = task;
+        return this;
     }
 }

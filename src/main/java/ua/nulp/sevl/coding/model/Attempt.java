@@ -41,39 +41,44 @@ public class Attempt {
         return user;
     }
 
-    public void setUser(User user) {
+    public Attempt setUser(User user) {
         this.user = user;
+        return this;
     }
 
     public Long getTime() {
         return time;
     }
 
-    public void setTime(Long time) {
+    public Attempt setTime(Long time) {
         this.time = time;
+        return this;
     }
 
     public Integer getGrade() {
         return grade;
     }
 
-    public void setGrade(Integer grade) {
+    public Attempt setGrade(Integer grade) {
         this.grade = grade;
+        return this;
     }
 
     public String getSolution() {
         return solution;
     }
 
-    public void setSolution(String solution) {
+    public Attempt setSolution(String solution) {
         this.solution = solution;
+        return this;
     }
 
     public Task getTask() {
         return task;
     }
 
-    public void setTask(Task task) {
+    public Attempt setTask(Task task) {
         this.task = task;
+        return this;
     }
 }
