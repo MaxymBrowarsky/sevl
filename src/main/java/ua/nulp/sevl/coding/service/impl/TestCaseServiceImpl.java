@@ -23,8 +23,8 @@ public class TestCaseServiceImpl implements TestCaseService {
     }
 
     @Override
-    public void save(String input, String result, Set<Task> tasks) {
-        TestCase testCase = new TestCase(input, result, tasks);
+    public void save(String input, String result) {
+        TestCase testCase = new TestCase(input, result);
         testCaseRepository.save(testCase);
     }
 
@@ -34,13 +34,12 @@ public class TestCaseServiceImpl implements TestCaseService {
     }
 
     @Override
-    public TestCase update(Long id, String input, String result, Set<Task> tasks) {
+    public TestCase update(Long id, String input, String result) {
         Optional<TestCase> r = testCaseRepository.findById(id);
         if (r.isPresent()) {
             TestCase t = r.get();
             return t.setInput(input)
-                    .setResult(result)
-                    .setTasks(tasks);
+                    .setResult(result);
         }
         return testCaseRepository.findById(id).get();
     }

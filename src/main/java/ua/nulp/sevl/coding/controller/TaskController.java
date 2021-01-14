@@ -20,6 +20,7 @@ import ua.nulp.sevl.coding.service.ThemeService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 @Controller
 @RequestMapping("/task")
@@ -92,5 +93,15 @@ public class TaskController {
         taskService.save(task);
         return new ResponseEntity<String>("Success", HttpStatus.OK);
     }
+
+    @GetMapping(value = "/all")
+    public String all(Model model) {
+        List<Task> tasks = taskService.findAll();
+        model.addAttribute("tasks", tasks);
+
+        System.out.println("=== tasksList ===");
+        return "tasksList";
+    }
+
 
 }
