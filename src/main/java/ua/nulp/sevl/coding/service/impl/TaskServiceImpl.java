@@ -86,7 +86,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> findByThemeId(Long id) {
-        return taskRepository.findByThemeId(id);
+        return null;
     }
 
     @Override

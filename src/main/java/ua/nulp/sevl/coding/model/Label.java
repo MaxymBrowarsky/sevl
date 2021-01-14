@@ -7,23 +7,22 @@ import java.util.List;
 @Table(name = "label")
 public class Label {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "text")
     private String text;
-    @ManyToMany
-    @JoinTable(
-            name = "TaskLabel",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "label_id"))
-    private List<Task> task;
+    @ManyToMany(mappedBy = "labels")
+//    @JoinTable(
+//            name = "TaskLabel",
+//            joinColumns = @JoinColumn(name = "id"),
+//            inverseJoinColumns = @JoinColumn(name = "label_id"))
+    private List<Task> tasks;
 
     public Label() {
     }
 
-    public Label(String text, List<Task> task) {
+    public Label(String text) {
         this.text = text;
-        this.task = task;
     }
 
     public Long getId() {
@@ -43,12 +42,12 @@ public class Label {
         return this;
     }
 
-    public List<Task> getTask() {
-        return task;
+    public List<Task> getTasks() {
+        return tasks;
     }
 
-    public Label setTask(List<Task> task) {
-        this.task = task;
+    public Label setTasks(List<Task> tasks) {
+        this.tasks = tasks;
         return this;
     }
 }

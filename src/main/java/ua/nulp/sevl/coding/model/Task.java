@@ -4,9 +4,10 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "task")
 public class Task {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String description;
@@ -14,23 +15,23 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "theme_id")
     private Theme theme;
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-            name = "TaskLabel",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "task_id"))
+            name = "tasktestcase",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "test_case_id"))
     private List<TestCase> testCases;
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-            name = "TaskTestCase",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "task_id"))
+            name = "tasklabel",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "label_id"))
     private List<Label> labels;
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-            name = "TaskAttempt",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "task_id"))
+            name = "taskattempt",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "attempt_id"))
     private List<Attempt> attempts;
 
     public Task() {

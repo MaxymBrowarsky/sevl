@@ -3,7 +3,6 @@ package ua.nulp.sevl.coding.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.nulp.sevl.coding.model.Label;
-import ua.nulp.sevl.coding.model.Task;
 import ua.nulp.sevl.coding.repository.LabelRepository;
 import ua.nulp.sevl.coding.service.LabelService;
 
@@ -22,8 +21,8 @@ public class LabelServiceImpl implements LabelService {
     }
 
     @Override
-    public void save(String text, List<Task> tasks) {
-        Label label = new Label(text, tasks);
+    public void save(String text) {
+        Label label = new Label(text);
         labelRepository.save(label);
     }
 
@@ -33,12 +32,11 @@ public class LabelServiceImpl implements LabelService {
     }
 
     @Override
-    public Label update(Long id, String text, List<Task> tasks) {
+    public Label update(Long id, String text) {
         Optional<Label> r = labelRepository.findById(id);
         if (r.isPresent()) {
             Label l = r.get();
-            return l.setText(text)
-                    .setTask(tasks);
+            return l.setText(text);
         }
         return labelRepository.findById(id).get();
     }
@@ -49,7 +47,7 @@ public class LabelServiceImpl implements LabelService {
         if (r.isPresent()) {
             Label l = r.get();
             return l.setText(label.getText())
-                    .setTask(label.getTask());
+                    .setTasks(label.getTasks());
         }
         return labelRepository.findById(label.getId()).get();
     }
@@ -57,6 +55,14 @@ public class LabelServiceImpl implements LabelService {
     @Override
     public Label find(Long id) {
         return labelRepository.findById(id).get();
+    }
+
+    @Override
+    public Label findByText(String text) {
+        if (labelRepository.findByText(text).isEmpty()){
+            return null;
+        }
+        return labelRepository.findByText(text).get(0);
     }
 
     @Override
