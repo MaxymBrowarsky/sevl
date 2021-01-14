@@ -16,7 +16,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByAuthor(String author);
 
 //    @Query("select t from Task t where t.theme_id = ?1")
-    public List<Task> findByThemeId(Long id);
+    //public List<Task> findByThemeId(Long id);
 
     @Query("select t from Task t where t.labels = ?1")
     public List<Task> findWithLabels(List<Label> labels);

@@ -8,9 +8,9 @@ import java.util.Set;
 
 public interface TestCaseService {
     void save(TestCase testCase);
-    void save(String input, String result, Set<Task> tasks);
+    void save(String input, String result);
     void delete(Long id);
-    TestCase update(Long id, String input, String result, Set<Task> tasks);
+    TestCase update(Long id, String input, String result);
     TestCase update(TestCase testCase);
     TestCase find(Long id);
     List<TestCase> findAll();

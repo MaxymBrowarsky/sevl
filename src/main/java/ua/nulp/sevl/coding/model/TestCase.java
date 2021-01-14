@@ -4,26 +4,26 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Table(name = "testcase")
 public class TestCase {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String input;
     private String result;
-    @ManyToMany
-    @JoinTable(
-            name = "TaskTestCase",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "test_case_id"))
+    @ManyToMany(mappedBy = "testCases")
+//    @JoinTable(
+//            name = "TaskTestCase",
+//            joinColumns = @JoinColumn(name = "id"),
+//            inverseJoinColumns = @JoinColumn(name = "test_case_id"))
     private Set<Task> tasks;
 
     public TestCase() {
     }
 
-    public TestCase(String input, String result, Set<Task> tasks) {
+    public TestCase(String input, String result) {
         this.input = input;
         this.result = result;
-        this.tasks = tasks;
     }
 
     public Long getId() {

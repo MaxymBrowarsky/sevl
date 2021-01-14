@@ -8,10 +8,11 @@ import java.util.Set;
 
 public interface ThemeService {
     void save(Theme theme);
-    void save(String text, Set<Task> tasks);
+    void save(String text);
     void delete(Long id);
-    Theme update(Long id, String text, Set<Task> tasks);
+    Theme update(Long id, String text);
     Theme update(Theme theme);
     Theme find(Long id);
+    Theme findByText(String text);
     List<Theme> findAll();
 }

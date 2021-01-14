@@ -6,7 +6,7 @@ import java.util.Set;
 @Entity
 public class Theme {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String text;
     @OneToMany
@@ -15,9 +15,8 @@ public class Theme {
     public Theme() {
     }
 
-    public Theme(String text, Set<Task> tasks) {
+    public Theme(String text) {
         this.text = text;
-        this.tasks = tasks;
     }
 
     public Long getId() {

@@ -24,8 +24,8 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public void save(String text, Set<Task> tasks) {
-        Theme theme = new Theme(text, tasks);
+    public void save(String text) {
+        Theme theme = new Theme(text);
         themeRepository.save(theme);
     }
 
@@ -35,12 +35,11 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public Theme update(Long id, String text, Set<Task> tasks) {
+    public Theme update(Long id, String text) {
         Optional<Theme> r = themeRepository.findById(id);
         if (r.isPresent()) {
             Theme t = r.get();
-            return t.setText(text)
-                    .setTasks(tasks);
+            return t.setText(text);
         }
         return themeRepository.findById(id).get();
     }
@@ -59,6 +58,14 @@ public class ThemeServiceImpl implements ThemeService {
     @Override
     public Theme find(Long id) {
         return themeRepository.findById(id).get();
+    }
+
+    @Override
+    public Theme findByText(String text) {
+        if (themeRepository.findByText(text).isEmpty()){
+            return null;
+        }
+        return themeRepository.findByText(text).get(0);
     }
 
     @Override

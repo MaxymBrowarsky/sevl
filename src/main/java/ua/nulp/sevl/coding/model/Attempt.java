@@ -7,7 +7,7 @@ import java.util.Set;
 @Table(name = "attempt")
 public class Attempt {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
@@ -18,11 +18,11 @@ public class Attempt {
     private Integer grade;
     @Column(name = "solution")
     private String solution;
-    @ManyToMany
-    @JoinTable(
-            name = "TaskAttempt",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "attempt_id"))
+    @ManyToMany(mappedBy = "attempts")
+//    @JoinTable(
+//            name = "taskattempt",
+//            joinColumns = @JoinColumn(name = "id"),
+//            inverseJoinColumns = @JoinColumn(name = "attempt_id"))
     private Set<Task> tasks;
 
     public Attempt() {
