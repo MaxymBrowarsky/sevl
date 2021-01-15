@@ -5,18 +5,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ua.nulp.sevl.coding.form.CreateTaskForm;
+import ua.nulp.sevl.coding.form.TaskResult;
 import ua.nulp.sevl.coding.model.*;
-import ua.nulp.sevl.coding.service.LabelService;
-import ua.nulp.sevl.coding.service.SecurityService;
-import ua.nulp.sevl.coding.service.TaskService;
-import ua.nulp.sevl.coding.service.ThemeService;
+import ua.nulp.sevl.coding.service.*;
+import ua.nulp.sevl.coding.util.BadCodeException;
+import ua.nulp.sevl.coding.util.CodeExecutor;
+import ua.nulp.sevl.coding.util.CompileException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -24,6 +25,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/task")
+@SessionAttributes({"currentSolution", "results"})
 public class TaskController {
     @Autowired
     private TaskService taskService;
@@ -31,6 +33,10 @@ public class TaskController {
     private LabelService labelService;
     @Autowired
     private ThemeService themeService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AttemptService attemptService;
 
 //    @RequestMapping(value = "/create", method = RequestMethod.POST)
 //    private ResponseEntity<Task> createTask(@RequestParam String t) {
@@ -103,5 +109,80 @@ public class TaskController {
         return "tasksList";
     }
 
+    @GetMapping(value = "/{id}")
+    public String task(Model model, @PathVariable String id) {
+        //@ModelAttribute("currentSolution") String solution,
+
+        if(model.containsAttribute("results")){
+            model.addAttribute("results", model.getAttribute("results"));
+        }else {
+           // model.addAttribute("results", )
+        }
+
+        String defSol = "початкове значення";
+        if(model.containsAttribute("currentSolution")){
+            model.addAttribute("currentSolution", model.getAttribute("currentSolution").toString());
+        } else {
+            model.addAttribute("currentSolution", defSol);
+        }
+        Task task = taskService.find(Long.parseLong(id));
+        model.addAttribute("task", task);
+        model.addAttribute("attempt", new Attempt());
+        model.addAttribute("id", id);
+
+        System.out.println("=== task "+ id +" ===");
+        return "task";
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    public String attempt(Model model, @RequestParam String id, @RequestParam String solution) {
+        Attempt attempt = new Attempt();
+
+        Task task = taskService.find(Long.parseLong(id));
+        List<TestCase> testCases = task.getTestCases();
+
+        List<TaskResult> taskResults = new ArrayList<>();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String currentUserName = authentication.getName();
+            User user = userService.findByLogin(currentUserName);
+
+            CodeExecutor codeExecutor = new CodeExecutor();
+            codeExecutor.SaveToFile(solution);
+            ArrayList<Boolean> successTestCase = new ArrayList<>();
+            try {
+                codeExecutor.compile();
+                for (TestCase tc: testCases
+                     ) {
+                    try{
+                        CodeExecutor.TestResult tr = codeExecutor.executeCode(tc);
+                        System.out.println("==============================================");
+                        System.out.println(tr.isSuccess());
+                        System.out.println(tr.getResult());
+                        successTestCase.add(tr.isSuccess());
+                        taskResults.add(new TaskResult(tr.isSuccess(), tc.getResult(), tr.getResult()));
+                    } catch (BadCodeException e){
+                        //TODO
+                    }
+                }
+            } catch (CompileException e) {
+                e.printStackTrace();//TODO
+            }
+
+            attempt.setUser(user);
+            int grade = (int)( (successTestCase.stream().filter(x -> x.booleanValue()).count())/
+                    ((double) testCases.size()) * 100);
+            attempt.setGrade(grade);//TODO
+            attempt.setSolution(solution);
+            attempt.setTime(0L);
+            attemptService.save(attempt);
+        }
+
+        model.addAttribute("results", taskResults);
+        model.addAttribute("currentSolution", solution);
+
+        return "redirect:/task/"+id;
+    }
 
 }

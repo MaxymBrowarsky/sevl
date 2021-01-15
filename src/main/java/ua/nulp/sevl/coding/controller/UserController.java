@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,7 +67,14 @@ public class UserController {
         System.out.println(login);
         System.out.println(password);
         securityService.autoLogin(login, password);
-        if (securityService.findLoggedInUsername() == login) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String currentUserName = authentication.getName();
+            System.out.println(currentUserName);
+        }
+
+        if (securityService.findLoggedInUsername().equals(login)) {
             return new ResponseEntity<String>("Success", HttpStatus.OK);
         }
         return new ResponseEntity<String>("Failure", HttpStatus.BAD_REQUEST);

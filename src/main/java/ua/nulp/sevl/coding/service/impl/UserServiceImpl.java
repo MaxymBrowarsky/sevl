@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
             User user = new User().setLogin("test").setPassword("test").setRoles(role);
             return user;
         }
-        User user = userRepository.findUserByLogin(login);
+        User user = userRepository.myquery(login);
         return user;
     }
 }
