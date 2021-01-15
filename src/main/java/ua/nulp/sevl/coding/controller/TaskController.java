@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.nulp.sevl.coding.form.CreateTaskForm;
+import ua.nulp.sevl.coding.form.TaskResult;
 import ua.nulp.sevl.coding.model.*;
 import ua.nulp.sevl.coding.service.*;
 import ua.nulp.sevl.coding.util.BadCodeException;
@@ -24,6 +25,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/task")
+@SessionAttributes({"currentSolution", "results"})
 public class TaskController {
     @Autowired
     private TaskService taskService;
@@ -33,6 +35,8 @@ public class TaskController {
     private ThemeService themeService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private AttemptService attemptService;
 
 //    @RequestMapping(value = "/create", method = RequestMethod.POST)
 //    private ResponseEntity<Task> createTask(@RequestParam String t) {
@@ -107,26 +111,46 @@ public class TaskController {
 
     @GetMapping(value = "/{id}")
     public String task(Model model, @PathVariable String id) {
+        //@ModelAttribute("currentSolution") String solution,
 
+        if(model.containsAttribute("results")){
+            model.addAttribute("results", model.getAttribute("results"));
+        }else {
+           // model.addAttribute("results", )
+        }
+
+        String defSol = "початкове значення";
+        if(model.containsAttribute("currentSolution")){
+            model.addAttribute("currentSolution", model.getAttribute("currentSolution").toString());
+        } else {
+            model.addAttribute("currentSolution", defSol);
+        }
         Task task = taskService.find(Long.parseLong(id));
         model.addAttribute("task", task);
+        model.addAttribute("attempt", new Attempt());
+        model.addAttribute("id", id);
 
         System.out.println("=== task "+ id +" ===");
-        return "index";//TODO change
+        return "task";
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    public ResponseEntity<String> putTask(@RequestParam String id, @RequestParam String solution) {
+    public String attempt(Model model, @RequestParam String id, @RequestParam String solution) {
+        Attempt attempt = new Attempt();
+
         Task task = taskService.find(Long.parseLong(id));
         List<TestCase> testCases = task.getTestCases();
 
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-//            String currentUserName = authentication.getName();
-//            User user = userService.findByLogin(currentUserName);
+        List<TaskResult> taskResults = new ArrayList<>();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String currentUserName = authentication.getName();
+            User user = userService.findByLogin(currentUserName);
 
             CodeExecutor codeExecutor = new CodeExecutor();
             codeExecutor.SaveToFile(solution);
+            ArrayList<Boolean> successTestCase = new ArrayList<>();
             try {
                 codeExecutor.compile();
                 for (TestCase tc: testCases
@@ -136,6 +160,8 @@ public class TaskController {
                         System.out.println("==============================================");
                         System.out.println(tr.isSuccess());
                         System.out.println(tr.getResult());
+                        successTestCase.add(tr.isSuccess());
+                        taskResults.add(new TaskResult(tr.isSuccess(), tc.getResult(), tr.getResult()));
                     } catch (BadCodeException e){
                         //TODO
                     }
@@ -144,11 +170,19 @@ public class TaskController {
                 e.printStackTrace();//TODO
             }
 
+            attempt.setUser(user);
+            int grade = (int)( (successTestCase.stream().filter(x -> x.booleanValue()).count())/
+                    ((double) testCases.size()) * 100);
+            attempt.setGrade(grade);//TODO
+            attempt.setSolution(solution);
+            attempt.setTime(0L);
+            attemptService.save(attempt);
+        }
 
-//        }
+        model.addAttribute("results", taskResults);
+        model.addAttribute("currentSolution", solution);
 
-
-        return new ResponseEntity<String>("Success", HttpStatus.OK);
+        return "redirect:/task/"+id;
     }
 
 }
