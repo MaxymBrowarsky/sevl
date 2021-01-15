@@ -5,18 +5,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ua.nulp.sevl.coding.form.CreateTaskForm;
 import ua.nulp.sevl.coding.model.*;
-import ua.nulp.sevl.coding.service.LabelService;
-import ua.nulp.sevl.coding.service.SecurityService;
-import ua.nulp.sevl.coding.service.TaskService;
-import ua.nulp.sevl.coding.service.ThemeService;
+import ua.nulp.sevl.coding.service.*;
+import ua.nulp.sevl.coding.util.BadCodeException;
+import ua.nulp.sevl.coding.util.CodeExecutor;
+import ua.nulp.sevl.coding.util.CompileException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,6 +31,8 @@ public class TaskController {
     private LabelService labelService;
     @Autowired
     private ThemeService themeService;
+    @Autowired
+    private UserService userService;
 
 //    @RequestMapping(value = "/create", method = RequestMethod.POST)
 //    private ResponseEntity<Task> createTask(@RequestParam String t) {
@@ -103,5 +105,50 @@ public class TaskController {
         return "tasksList";
     }
 
+    @GetMapping(value = "/{id}")
+    public String task(Model model, @PathVariable String id) {
+
+        Task task = taskService.find(Long.parseLong(id));
+        model.addAttribute("task", task);
+
+        System.out.println("=== task "+ id +" ===");
+        return "index";//TODO change
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    public ResponseEntity<String> putTask(@RequestParam String id, @RequestParam String solution) {
+        Task task = taskService.find(Long.parseLong(id));
+        List<TestCase> testCases = task.getTestCases();
+
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+//            String currentUserName = authentication.getName();
+//            User user = userService.findByLogin(currentUserName);
+
+            CodeExecutor codeExecutor = new CodeExecutor();
+            codeExecutor.SaveToFile(solution);
+            try {
+                codeExecutor.compile();
+                for (TestCase tc: testCases
+                     ) {
+                    try{
+                        CodeExecutor.TestResult tr = codeExecutor.executeCode(tc);
+                        System.out.println("==============================================");
+                        System.out.println(tr.isSuccess());
+                        System.out.println(tr.getResult());
+                    } catch (BadCodeException e){
+                        //TODO
+                    }
+                }
+            } catch (CompileException e) {
+                e.printStackTrace();//TODO
+            }
+
+
+//        }
+
+
+        return new ResponseEntity<String>("Success", HttpStatus.OK);
+    }
 
 }

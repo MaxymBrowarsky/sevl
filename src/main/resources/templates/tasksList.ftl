@@ -650,6 +650,9 @@
           }
         }
 
+        .rowLayout {
+          display: inline;
+        }
 
         /*//////////////////////////////////////////////////////////////////
         [ Responsive ]*/
@@ -712,13 +715,12 @@
                     <ul th:if="${tasks.empty}">
                         <li colspan="2"> No Task Available </li>
                     </ul>
-                    <ol class="rectangle" th:each="task : ${tasks}" >
-                        <li>
+                    <ol class="rectangle">
+                        <li th:each="task : ${tasks}" >
                             <div class="taskTegs">
-                                <a class="taskName" href="#" th:text="${task.title}">Назва завдання</a>
-                                <p th:text="${task.theme.text}">Labels</p>
-                                <ul th:each ="label : ${task.labels}">
-                                    <p th:text="${label.text}">Labels</p>
+                                <a class="taskName" th:href="@{/task/{id}(id=${task.id})}" th:text="${task.title}">Назва завдання</a>
+                                <ul>
+                                    <span class="rowLayout" th:each ="label : ${task.labels}"  th:text="${label.text + ' '} ">Labels</span>
                                 </ul>
                             </div>
                         </li>
