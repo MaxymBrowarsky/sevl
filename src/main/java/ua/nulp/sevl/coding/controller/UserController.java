@@ -19,7 +19,7 @@ import ua.nulp.sevl.coding.service.SecurityService;
 import ua.nulp.sevl.coding.service.UserService;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/")
 public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -29,7 +29,7 @@ public class UserController {
     @Autowired
     private SecurityService securityService;
 
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/create", method = RequestMethod.POST)
     private ResponseEntity<User> createUser(@RequestParam String u) {
         System.out.println(u);
         ObjectMapper mapper=new ObjectMapper();
@@ -50,7 +50,7 @@ public class UserController {
         return  new ResponseEntity<User>(user,HttpStatus.OK);
     }
 
-    @GetMapping(value = "/login")
+    @GetMapping(value = "/user/login")
     public String login(Model model) {
         UserForm uf = new UserForm();
         model.addAttribute("user", uf);
@@ -62,8 +62,8 @@ public class UserController {
         return "index";
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<String> login(@RequestParam String login, @RequestParam String password) {
+    @RequestMapping(value = "/user/login", method = RequestMethod.POST)
+    public String login(@RequestParam String login, @RequestParam String password) {
         System.out.println(login);
         System.out.println(password);
         securityService.autoLogin(login, password);
@@ -75,9 +75,9 @@ public class UserController {
         }
 
         if (securityService.findLoggedInUsername().equals(login)) {
-            return new ResponseEntity<String>("Success", HttpStatus.OK);
+            return  "redirect:/task/all";
         }
-        return new ResponseEntity<String>("Failure", HttpStatus.BAD_REQUEST);
+        return  "user/login";
 
 
     }

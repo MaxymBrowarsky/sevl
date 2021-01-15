@@ -25,7 +25,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/task")
-@SessionAttributes({"currentSolution", "results"})
+@SessionAttributes({"currentSolution", "results", "grade"})
 public class TaskController {
     @Autowired
     private TaskService taskService;
@@ -104,7 +104,12 @@ public class TaskController {
     public String all(Model model) {
         List<Task> tasks = taskService.findAll();
         model.addAttribute("tasks", tasks);
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String currentUserName = authentication.getName();
+            User user = userService.findByLogin(currentUserName);
+            model.addAttribute("login", user.getLogin());
+        }
         System.out.println("=== tasksList ===");
         return "tasksList";
     }
@@ -112,11 +117,22 @@ public class TaskController {
     @GetMapping(value = "/{id}")
     public String task(Model model, @PathVariable String id) {
         //@ModelAttribute("currentSolution") String solution,
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String currentUserName = authentication.getName();
+            User user = userService.findByLogin(currentUserName);
+            model.addAttribute("login", user.getLogin());
+        }
         if(model.containsAttribute("results")){
             model.addAttribute("results", model.getAttribute("results"));
         }else {
            // model.addAttribute("results", )
+        }
+
+        if(model.containsAttribute("grade")){
+            model.addAttribute("grade", model.getAttribute("grade"));
+        }else {
+            model.addAttribute("grade", "0");
         }
 
         String defSol = "початкове значення";
@@ -174,6 +190,7 @@ public class TaskController {
             int grade = (int)( (successTestCase.stream().filter(x -> x.booleanValue()).count())/
                     ((double) testCases.size()) * 100);
             attempt.setGrade(grade);//TODO
+            model.addAttribute("grade", grade);
             attempt.setSolution(solution);
             attempt.setTime(0L);
             attemptService.save(attempt);
