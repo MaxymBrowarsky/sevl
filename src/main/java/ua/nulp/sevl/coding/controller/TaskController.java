@@ -20,6 +20,7 @@ import ua.nulp.sevl.coding.util.CodeExecutor;
 import ua.nulp.sevl.coding.util.CompileException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -68,7 +69,7 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ResponseEntity<String> createTask(@RequestParam String title, @RequestParam String labels, @RequestParam String theme, @RequestParam String description) {
+    public ResponseEntity<String> createTask(@RequestParam String title, @RequestParam String labels, @RequestParam String theme, @RequestParam String description, @RequestParam String testCases) {
 
 
         //add all labels
@@ -91,9 +92,16 @@ public class TaskController {
             themeService.save(themeObj);//TODO maybe not there
         }
 
+        List<String> t = Arrays.asList(testCases.split(";;"));
+        List<TestCase> tcs = new ArrayList<>();
+        t.forEach(tcc -> {
+            TestCase tc = new TestCase("", tcc);
+            tcs.add(tc);
+        });
+
         String authorName = "name";//TODO get from logined user
         Task task = new Task(title, description, authorName, themeObj,
-                new ArrayList<>(),//TODO add test cases
+                tcs,//TODO add test cases
                 labelsSet,
                 new ArrayList<>());
         taskService.save(task);
@@ -135,7 +143,11 @@ public class TaskController {
             model.addAttribute("grade", "0");
         }
 
-        String defSol = "початкове значення";
+        String defSol = "public class Test {\n" +
+                "    public static void main(String[] args) {\n" +
+                "        //Write your code here\n" +
+                "    }\n" +
+                "}";
         if(model.containsAttribute("currentSolution")){
             model.addAttribute("currentSolution", model.getAttribute("currentSolution").toString());
         } else {
